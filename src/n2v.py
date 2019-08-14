@@ -5,6 +5,8 @@
 # Date              : 21.07.2019
 # Last Modified Date: 21.07.2019
 # Last Modified By  : Wan Li
+# Reference paper: [Grover, Leskovec, KDD, 2016]
+# Reference code: https://github.com/aditya-grover/node2vec
 
 import numpy as np
 import networkx as nx
@@ -12,9 +14,10 @@ import random
 
 
 class Graph():
-	def __init__(self, nx_G, is_directed, p, q):
+	def __init__(self, nx_G, is_directed, is_weighted, p, q):
 		self.G = nx_G
 		self.is_directed = is_directed
+		self.is_weighted = is_weighted
 		self.p = p
 		self.q = q
 
@@ -49,16 +52,17 @@ class Graph():
 		    Repeatedly simulate random walks from each node.
 		'''
 		G = self.G
-		walks = []
+		# walks = []
 		nodes = list(G.nodes())
 		print('Walk iteration:')
 		for walk_iter in range(num_walks):
 			print(str(walk_iter+1), '/', str(num_walks))
 			random.shuffle(nodes)
 			for node in nodes:
-				walks.append(self.node2vec_walk(walk_length=walk_length, start_node=node))
+			    yield self.node2vec_walk(walk_length=walk_length, start_node=node)
+				# walks.append(self.node2vec_walk(walk_length=walk_length, start_node=node))
 
-		return walks
+		#return walks
 
 	def get_alias_edge(self, src, dst):
 		'''

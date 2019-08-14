@@ -61,14 +61,14 @@ def parse_args():
     return parser.parse_args()
 
 
-def read_graph(input, is_weighted, is_directed):
+def read_graph(input, is_weighted, is_directed, nodetype=int):
     '''
     Reads the input network in networkx.
     '''
     if is_weighted:
-        G = nx.read_edgelist(input, nodetype=int, data=(('weight',float),), create_using=nx.DiGraph())
+        G = nx.read_edgelist(input, nodetype=nodetype, data=(('weight',float),), create_using=nx.DiGraph())
     else:
-        G = nx.read_edgelist(input, nodetype=int, create_using=nx.DiGraph())
+        G = nx.read_edgelist(input, nodetype=nodetype, create_using=nx.DiGraph())
         for edge in G.edges():
             G[edge[0]][edge[1]]['weight'] = 1
 
@@ -91,7 +91,7 @@ def main(args):
     Pipeline for representational learning for all nodes in a graph.
     '''
     nx_G = read_graph(input=args.input, is_weighted=args.weighted, is_directed=args.directed)
-    G = n2v.Graph(nx_G, is_directed=args.directed, p=args.p, q=args.q)
+    G = n2v.Graph(nx_G, is_directed=args.directed, is_weighted=args.is_weighted, p=args.p, q=args.q)
     G.preprocess_transition_probs()
     walks = G.simulate_walks(num_walks=args.num_walks, walk_length=args.walk_length)
     learn_embeddings(walks, dimensions=args.dimensions, window_size=args.window_size, workers=args.workers, iter=args.iter, output=args.output)
