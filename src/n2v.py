@@ -17,7 +17,7 @@ class Graph():
 	def __init__(self, nx_G, is_directed, is_weighted, p, q):
 		self.G = nx_G
 		self.is_directed = is_directed
-		self.is_weighted = is_weighted
+		self.is_weighted = is_weighted # weighted graph (by default) uses alias sampling
 		self.p = p
 		self.q = q
 
